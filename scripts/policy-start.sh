@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 exit
 pip install influxdb
 if [ $? -gt 0 ]; then 

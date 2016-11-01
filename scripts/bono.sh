@@ -7,18 +7,18 @@ exec > >(sudo tee -a /var/log/clearwater-cloudify.log) 2>&1
 
 
 # Configure the APT software source.
-echo 'deb http://repo.cw-ngv.com/stable binary/' | sudo tee -a /etc/apt/sources.list.d/clearwater.list
+echo 'deb http://repo.cw-ngv.com/archive/repo107 binary/' | sudo tee -a /etc/apt/sources.list.d/clearwater.list
 curl -L http://repo.cw-ngv.com/repo_key | sudo apt-key add -
 sudo apt-get update
 
 # Configure /etc/clearwater/local_config.
 sudo mkdir -p /etc/clearwater
-etcd_ip=$(hostname -I)
+etcd_ip=$(ip addr show dev eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
 cat << EOF | sudo -E tee -a /etc/clearwater/local_config
-local_ip=$(hostname -I)
+local_ip=$(ip addr show dev eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
 public_ip=$public_ip
 public_hostname=$public_ip
-etcd_cluster=$(hostname -I)
+etcd_cluster=$(ip addr show dev eth0 | grep "inet\b" | awk '{print $2}' | cut -d/ -f1)
 EOF
 
 sudo -E bash -c 'cat > /etc/clearwater/shared_config << EOF
