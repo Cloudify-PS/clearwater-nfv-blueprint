@@ -20,18 +20,9 @@ enabled = true
 [exceptions]
 max_ttl = 600' | sudo tee --append /etc/chronos/chronos.conf
 
-ctx logger info "Configure the APT software source"
-if [ ! -f /etc/apt/sources.list.d/clearwater.list ]
-  then
-    echo 'deb http://repo.cw-ngv.com/archive/repo107 binary/' | sudo tee --append /etc/apt/sources.list.d/clearwater.list
-    curl -L http://repo.cw-ngv.com/repo_key | sudo apt-key add -
-fi
-sudo apt-get update
-
 ctx logger info "Installing ralf packages and other clearwater packages"
-sudo DEBIAN_FRONTEND=noninteractive apt-get install ralf --yes --force-yes -o DPkg::options::=--force-confnew
-sudo DEBIAN_FRONTEND=noninteractive  apt-get install clearwater-management --yes --force-yes
-sudo DEBIAN_FRONTEND=noninteractive apt-get install clearwater-snmpd --yes --force-yes
+sudo DEBIAN_FRONTEND=noninteractive apt-get install ralf-node --yes
+sudo DEBIAN_FRONTEND=noninteractive apt-get install clearwater-snmpd --yes
 ctx logger info "The installation packages is done correctly"
 
 ctx logger info "Use the DNS server"

@@ -12,6 +12,8 @@
 import commands
 import tempfile
 import re
+import os
+import subprocess
 
 
 from jinja2 import Template
@@ -94,6 +96,18 @@ def configure(subject=None):
 
     _run('sudo chmod 644 {0}'.format(CONFIG_PATH_NAMESERVER),
          error_message='Failed to change permissions {0}.'.format(CONFIG_PATH_NAMESERVER))
+    _add_clearwater_repo()
+    _run('sudo DEBIAN_FRONTEND=noninteractive apt-get install clearwater-management --yes',
+         error_message='Could not install clearwater management package')
+
+
+def _add_clearwater_repo():
+    if not os.path.exists('/etc/apt/sources.list.d/clearwater.list'):
+        subprocess.Popen("echo 'deb {0} binary/' | sudo tee --append "
+                         "/etc/apt/sources.list.d/clearwater.list".format(inputs['repo_url']),
+                         shell=True).wait()
+        subprocess.Popen("curl -L http://repo.cw-ngv.com/repo_key | sudo apt-key add -", shell=True).wait()
+        subprocess.Popen("sudo apt-get update", shell=True).wait()
 
 
 def start():
@@ -105,7 +119,7 @@ def stop():
 
 
 def _service(state):
-    role = re.split(r'_',ctx.instance.id)[0]
+    role = re.split(r'_', ctx.instance.id)[0]
     _run('sudo service {0} {1}'.format(role,state),
          error_message='Failed setting state to {0}'.format(state))
 

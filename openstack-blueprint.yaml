@@ -18,8 +18,10 @@ imports:
 
 inputs:
 
+    repo_url:
+        default: 'http://repo.cw-ngv.com/archive/repo107'
     manager_resource_prefix:
-        default: ''
+        default: 'clearwater'
 
     cloudify_agent:
         default:  'ubuntu'

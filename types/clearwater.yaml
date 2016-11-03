@@ -28,6 +28,8 @@ node_types:
           inputs:
             public_ip:
               default: ''
+            repo_url:
+              default: { get_input: repo_url }
 
   # Specific types for clearwater nodes (install role etc.)
   clearwater.nodes.sprout:
